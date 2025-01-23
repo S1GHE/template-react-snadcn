@@ -1,30 +1,34 @@
-import { NavEnum } from "@/shared/enum";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import { NavPaths } from "@/shared/nav";
 import { Layout } from "@/shared/layout";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { HomePage } from "./home";
-import { DocsPages } from "./docs";
 
-export const Routing = () => {
-  const paths = [
+const createAppRouter = () =>
+  createBrowserRouter([
     {
-      path: NavEnum.HOME,
-      element: <HomePage />,
+      path: NavPaths.app.lending.path,
+      element: <Layout />,
+      children: [
+        {
+          path: NavPaths.app.lending.path,
+          lazy: async () => {
+            const m = await import("./landing/ui/index.tsx");
+            return { element: <m.default /> };
+          },
+        },
+        {
+          path: NavPaths.app.docs.path,
+          lazy: async () => {
+            const m = await import("./docs/ui/index.tsx");
+            return { element: <m.default /> };
+          },
+        },
+      ],
     },
-    {
-      path: NavEnum.DOCS,
-      element: <DocsPages />,
-    },
-  ];
+  ]);
 
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          {paths.map((el) => (
-            <Route element={el.element} path={el.path} key={el.path} />
-          ))}
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  );
+export const AppRouter = () => {
+  const router = createAppRouter();
+
+  return <RouterProvider router={router} />;
 };

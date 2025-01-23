@@ -1,11 +1,12 @@
+import { AppRouter } from "@/page";
+
+import { AppProvider } from "./provider/AppProvider.tsx";
 import "./style/global.css";
-import { Suspense } from "react";
-import { Routing } from "@/page";
 
 export const App = () => {
   return (
-    <Suspense>
-      <Routing />
-    </Suspense>
+    <AppProvider>
+      <AppRouter />
+    </AppProvider>
   );
 };
